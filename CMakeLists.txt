@@ -16,9 +16,6 @@ set(PROJECT_SOURCES
         src/main_window.cpp
         src/main_window.h
         src/main_window.ui
-        src/nic_widget.h
-        src/nic_widget.cpp
-        src/nic_widget.ui
 )
 
 qt_add_executable(NicQt
