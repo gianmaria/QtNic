@@ -1,6 +1,7 @@
 #include "main_window.h"
-#include "nic_widget.h"
 #include "./ui_main_window.h"
+
+#include "nic.h"
 
 #include <QPushButton>
 
@@ -10,11 +11,9 @@ Main_Window::Main_Window(QWidget *parent)
 {
     ui->setupUi(this);
 
-    for (int i = 0; i < 12; ++i) {
-        //QPushButton *button = new QPushButton("Button " + QString::number(i + 1));
-        Nic_Widget* w = new Nic_Widget(this);
-        ui->verticalLayout->addWidget(w);
-    }
+    //ui->plainTextEdit->setPlainText(QString("User is admin? %1").arg(is_user_admin()));
+
+    vec<Interface> nics = collect_nic_info();
 
 }
 

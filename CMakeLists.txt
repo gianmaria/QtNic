@@ -16,6 +16,8 @@ set(PROJECT_SOURCES
         src/main_window.cpp
         src/main_window.h
         src/main_window.ui
+        src/nic.cpp
+        src/nic.h
         src/utf8.h
 )
 
