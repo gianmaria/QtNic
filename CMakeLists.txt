@@ -16,6 +16,7 @@ set(PROJECT_SOURCES
         src/main_window.cpp
         src/main_window.h
         src/main_window.ui
+        src/utf8.h
 )
 
 qt_add_executable(NicQt
