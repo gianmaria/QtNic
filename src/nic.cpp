@@ -292,6 +292,10 @@ str_cref get_name(const shared<Interface>& nic)
     return nic->name;
 }
 
+str_cref get_description(const shared<Interface> &nic)
+{
+    return nic->description;
+}
 
 // private stuff
 

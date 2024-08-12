@@ -47,6 +47,7 @@ unsigned long restart_as_admin();
 
 // NOTE: all this mumbo jumbo to hide windows.h from qt....
 str_cref get_name(const shared<Interface>& nic);
+str_cref get_description(const shared<Interface>& nic);
 
 
 #endif // NIC_H
