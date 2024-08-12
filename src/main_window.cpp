@@ -11,6 +11,8 @@ Main_Window::Main_Window(QWidget *parent)
     , ui(new Ui::Main_Window)
 {
     ui->setupUi(this);
+    ui->pbLoad->setVisible(false);
+
     setWindowTitle("All my interfaces");
 
     auto* quit_shortcut = new QShortcut({Qt::Key_Escape}, this);
@@ -19,6 +21,8 @@ Main_Window::Main_Window(QWidget *parent)
 
     connect(ui->pbLoad, &QPushButton::released,
             this, &Main_Window::onPbLoadReleased);
+    ui->pbLoad->click(); // simulate click instantly
+
     connect(ui->pbSave, &QPushButton::released,
             this, &Main_Window::onPbSaveReleased);
 }
