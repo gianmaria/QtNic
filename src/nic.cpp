@@ -224,10 +224,10 @@ void update_nic_metric(const vec<Interface> &interfaces, str_cref filename)
             continue;
         }
 
-        auto target_name = document[i].GetString();
+        auto* target_name = document[i].GetString();
 
         auto it = std::find_if(interfaces.begin(), interfaces.end(),
-                               [&target_name](const Interface& itf)
+                               [target_name](const Interface& itf)
                                {
                                    auto* src1 = reinterpret_cast<const utf8_int8_t*>(itf.name.c_str());
                                    auto* src2 = reinterpret_cast<const utf8_int8_t*>(target_name);
