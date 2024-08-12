@@ -4,14 +4,10 @@
 #include <assert.h>
 #include <cstdint>
 #include <print>
-//#include <iostream>
-//#include <map>
-//#include <set>
 #include <string_view>
 #include <string>
 #include <vector>
 #include <memory>
-//#include <cwchar>
 
 
 using u8 = uint8_t;
@@ -43,17 +39,17 @@ using shared = shared_ptr<T>;
 using namespace std::string_literals;
 using namespace std::string_view_literals;
 
-typedef unsigned long DWORD;
-
 
 struct Interface;
 
-void dump_nic_info(const vec<shared<Interface>> &interfaces);
-
-void update_nic_metric(const vec<Interface>& interfaces,
-                       str_cref filename);
-
 vec<shared<Interface>> collect_nic_info();
+
+void update_nic_metric(const vec<shared<Interface>>& interfaces,
+                       str_cref new_metric);
+
+str dump_nic_info(const vec<shared<Interface>> &interfaces);
+
+
 
 // NOTE: all this mumbo jumbo to hide windows.h from qt....
 str_cref get_name(const shared<Interface>& nic);
