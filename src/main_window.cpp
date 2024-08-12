@@ -17,21 +17,6 @@ Main_Window::Main_Window(QWidget *parent)
     connect(quit_shortcut, &QShortcut::activated,
             this, [this](){this->close();});
 
-    //ui->plainTextEdit->setPlainText(QString("User is admin? %1").arg(is_user_admin()));
-
-    qDebug() << "is running as admin?" << is_running_as_administrator();
-
-
-    vec<std::shared_ptr<Interface>> nics = collect_nic_info();
-    for (const auto& nic: nics)
-    {
-        auto& cpp_str = get_name(nic);
-        ui->plainTextEdit->appendPlainText(QString::fromUtf8(cpp_str.data(), -1));
-        // qDebug() << "shared ptr counter:" << nic.use_count();
-    }
-
-
-    // ui->plainTextEdit->appendPlainText(QString("is user admin? %1").arg(is_running_as_administrator()));
     connect(ui->pbLoad, &QPushButton::released,
             this, &Main_Window::onPbLoadReleased);
     connect(ui->pbSave, &QPushButton::released,
