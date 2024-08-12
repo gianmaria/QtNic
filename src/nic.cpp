@@ -77,7 +77,10 @@ WSA_Startup::~WSA_Startup()
 str to_UTF8(wstr_cref wide_str);
 wstr to_wide(str_cref utf8_str);
 str last_error_as_string(DWORD last_error);
-void update_nic_metric_for_luid(str_cref interface_name, IF_LUID luid, ULONG new_metric);
+void update_nic_metric_for_luid(str_cref interface_name,
+                                IF_LUID luid,
+                                ULONG new_metric,
+                                bool automatic_metric);
 
 
 // public stuff
@@ -187,45 +190,42 @@ vec<shared<Interface>> collect_nic_info()
     return interfaces;
 }
 
-void update_nic_metric(const vec<shared<Interface>> &interfaces,
-                       str_cref new_metric)
+
+vec<str> split_string_by_newline(str_cref text)
 {
-    // TODO: remove unnecessary copy
-    str json_content = new_metric;
+    vec<str> lines;
+    std::istringstream stream(text);
+    str line;
 
-    json::Document document;
-
-    if (document.Parse(json_content.data()).HasParseError())
+    while (std::getline(stream, line))
     {
-        auto* why = GetParseError_En(document.GetParseError());
-        throw std::format("[ERROR] Cannot parse JSON: {}", why);
+        lines.push_back(line);
     }
 
-    if (not document.IsArray())
+    return lines;
+}
+
+
+void update_nic_metric(const vec<shared<Interface>> &interfaces,
+                       str_cref nic_list)
+{
+    auto lines = split_string_by_newline(nic_list);
+
+    u32 pos = 1;
+    for (str_cref line : lines)
     {
-        throw std::format("[ERROR] Root value in json file is not an array.");
-    }
+        auto* target_name = line.data();
 
-    // Iterate over the array elements
-    for (json::SizeType i = 0;
-         i < document.Size();
-         ++i)
-    {
-        // Check if the array element is a string
-        if (not document[i].IsString())
-        {
-            continue;
-        }
-
-        auto* target_name = document[i].GetString();
-
-        auto it = std::find_if(interfaces.begin(), interfaces.end(),
-                               [target_name](const shared<Interface>& itf)
-                               {
-                                   auto* src1 = reinterpret_cast<const utf8_int8_t*>(itf->name.c_str());
-                                   auto* src2 = reinterpret_cast<const utf8_int8_t*>(target_name);
-                                   return utf8cmp(src1, src2) == 0;
-                               });
+        auto it = std::find_if(
+            interfaces.begin(),
+            interfaces.end(),
+            [target_name](const shared<Interface>& itf)
+            {
+                auto* src1 = reinterpret_cast<const utf8_int8_t*>(itf->name.c_str());
+                auto* src2 = reinterpret_cast<const utf8_int8_t*>(target_name);
+                return utf8cmp(src1, src2) == 0;
+            }
+        );
 
         if (it == interfaces.end())
         {
@@ -234,38 +234,12 @@ void update_nic_metric(const vec<shared<Interface>> &interfaces,
             continue;
         }
 
-        if ((*it)->automatic_metric)
-        {
-            MIB_IPINTERFACE_ROW row {};
-            row.Family = AF_INET;
-            row.InterfaceLuid = (*it)->luid;
+        ULONG new_metric = (pos++) * 10;
 
-            DWORD res = GetIpInterfaceEntry(&row);
-
-            if (res != NO_ERROR)
-            {
-                throw std::format("[ERROR] Cannot get info on interface '{}' : {}",
-                                  target_name, last_error_as_string(res));
-            }
-
-            row.UseAutomaticMetric = 0;
-            row.SitePrefixLength = 32; // For an IPv4 address, any value greater than 32 is an illegal value.
-
-            res = SetIpInterfaceEntry(&row);
-
-            if (res != NO_ERROR)
-            {
-                // cout << std::format("[WARN] Cannot disable automatic metric for interface '{}' : {}",
-                //                     target_name, last_error_as_string(res));
-
-                continue;
-            }
-        }
-
-        ULONG new_metric = (i + 1) * 10;
         update_nic_metric_for_luid(target_name,
                                    (*it)->luid,
-                                   new_metric);
+                                   new_metric,
+                                   (*it)->automatic_metric);
 
         //cout << std::format("[INFO] interface '{}' updated succesfully, new metric: {}",
         //                    target_name, new_metric) << endl;
@@ -417,20 +391,28 @@ str last_error_as_string(DWORD last_error)
     return to_UTF8(wstr(buffer, size));
 }
 
-void update_nic_metric_for_luid(str_cref interface_name, IF_LUID luid, ULONG new_metric)
+void update_nic_metric_for_luid(str_cref interface_name,
+                                IF_LUID luid,
+                                ULONG new_metric,
+                                bool automatic_metric)
 {
     // Retrieve the IP interface table
     MIB_IPINTERFACE_ROW row {};
     row.Family = AF_INET; // IPv4
     row.InterfaceLuid = luid;
+    row.SitePrefixLength = 32; // For an IPv4 address, any value greater than 32 is an illegal value.
 
     DWORD result = GetIpInterfaceEntry(&row);
-    row.SitePrefixLength = 32; // For an IPv4 address, any value greater than 32 is an illegal value.
 
     if (result != NO_ERROR)
     {
         throw std::format("[ERROR] cannot get interface entry: {}",
                           last_error_as_string(result));
+    }
+
+    if (automatic_metric)
+    {
+        row.UseAutomaticMetric = 0;
     }
 
     // Change the metric
