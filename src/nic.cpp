@@ -14,12 +14,6 @@
 
 #include <sstream>
 
-#include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/error/en.h"
-namespace json = rapidjson;
-
 #include "utf8.h"
 
 
@@ -40,7 +34,6 @@ struct Interface
     IF_INDEX index {};
 };
 
-
 struct Heap_Deleter
 {
     void operator()(void* mem) const;
@@ -51,7 +44,6 @@ void Heap_Deleter::operator()(void *mem) const
     if (mem)
         HeapFree(GetProcessHeap(), NULL, mem);
 }
-
 
 struct WSA_Startup
 {
@@ -73,7 +65,9 @@ WSA_Startup::~WSA_Startup()
     WSACleanup();
 }
 
+
 // forward declaration of private stuff
+
 str to_UTF8(wstr_cref wide_str);
 wstr to_wide(str_cref utf8_str);
 str last_error_as_string(DWORD last_error);
@@ -81,6 +75,7 @@ void update_nic_metric_for_luid(str_cref interface_name,
                                 IF_LUID luid,
                                 ULONG new_metric,
                                 bool automatic_metric);
+vec<str> split_string_by_newline(str_cref text);
 
 
 // public stuff
@@ -190,22 +185,6 @@ vec<shared<Interface>> collect_nic_info()
     return interfaces;
 }
 
-
-vec<str> split_string_by_newline(str_cref text)
-{
-    vec<str> lines;
-    std::istringstream stream(text);
-    str line;
-
-    while (std::getline(stream, line))
-    {
-        lines.push_back(line);
-    }
-
-    return lines;
-}
-
-
 void update_nic_metric(const vec<shared<Interface>> &interfaces,
                        str_cref nic_list)
 {
@@ -244,27 +223,6 @@ void update_nic_metric(const vec<shared<Interface>> &interfaces,
         //cout << std::format("[INFO] interface '{}' updated succesfully, new metric: {}",
         //                    target_name, new_metric) << endl;
     }
-}
-
-str dump_nic_info(const vec<shared<Interface>> &interfaces)
-{
-    json::StringBuffer sb;
-    json::PrettyWriter writer(sb);
-
-    writer.StartArray();
-
-    for (const auto& itf : interfaces)
-    {
-        writer.String(itf->name.data());
-    }
-
-    writer.String("dummy, leave it as the last");
-    writer.EndArray();
-
-    std::stringstream ss;
-    ss << sb.GetString();
-
-    return ss.str();
 }
 
 
@@ -327,6 +285,7 @@ DWORD restart_as_admin()
 
     return (success == TRUE) ? NO_ERROR : GetLastError();
 }
+
 
 str_cref get_name(const shared<Interface>& nic)
 {
@@ -427,6 +386,20 @@ void update_nic_metric_for_luid(str_cref interface_name,
                           interface_name, last_error_as_string(result));
     }
 
+}
+
+vec<str> split_string_by_newline(str_cref text)
+{
+    vec<str> lines;
+    std::istringstream stream(text);
+    str line;
+
+    while (std::getline(stream, line))
+    {
+        lines.push_back(line);
+    }
+
+    return lines;
 }
 
 /* void run_as_administrator(wchar_t* argv[])

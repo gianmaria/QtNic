@@ -9,7 +9,6 @@
 #include <vector>
 #include <memory>
 
-
 using u8 = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
@@ -36,19 +35,11 @@ using vec = vector<T>;
 template<typename T>
 using shared = shared_ptr<T>;
 
-using namespace std::string_literals;
-using namespace std::string_view_literals;
-
-
 struct Interface;
 
 vec<shared<Interface>> collect_nic_info();
-
 void update_nic_metric(const vec<shared<Interface>>& interfaces,
                        str_cref new_metric);
-
-str dump_nic_info(const vec<shared<Interface>> &interfaces);
-
 
 str last_error_as_string(unsigned long last_error);
 bool is_running_as_administrator();
