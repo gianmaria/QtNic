@@ -284,7 +284,7 @@ str dump_nic_info(const vec<shared<Interface>> &interfaces)
         writer.String(itf->name.data());
     }
 
-    writer.String("dummy, leave it last");
+    writer.String("dummy, leave it as the last");
     writer.EndArray();
 
     std::stringstream ss;
