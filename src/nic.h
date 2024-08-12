@@ -38,7 +38,7 @@ using shared = shared_ptr<T>;
 struct Interface;
 
 vec<shared<Interface>> collect_nic_info();
-void update_nic_metric(const vec<shared<Interface>>& interfaces,
+u32 update_nic_metric(const vec<shared<Interface>>& interfaces,
                        str_cref new_metric);
 
 str last_error_as_string(unsigned long last_error);

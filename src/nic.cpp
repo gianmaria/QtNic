@@ -185,9 +185,11 @@ vec<shared<Interface>> collect_nic_info()
     return interfaces;
 }
 
-void update_nic_metric(const vec<shared<Interface>> &interfaces,
+u32 update_nic_metric(const vec<shared<Interface>> &interfaces,
                        str_cref nic_list)
 {
+    u32 skipped = 0;
+
     auto lines = split_string_by_newline(nic_list);
 
     u32 pos = 1;
@@ -208,8 +210,7 @@ void update_nic_metric(const vec<shared<Interface>> &interfaces,
 
         if (it == interfaces.end())
         {
-            // cout << std::format("[WARN] Cannot find interface '{}', maybe has been disabled? skipping...", target_name)
-            // << endl;
+            ++skipped;
             continue;
         }
 
@@ -219,10 +220,9 @@ void update_nic_metric(const vec<shared<Interface>> &interfaces,
                                    (*it)->luid,
                                    new_metric,
                                    (*it)->automatic_metric);
-
-        //cout << std::format("[INFO] interface '{}' updated succesfully, new metric: {}",
-        //                    target_name, new_metric) << endl;
     }
+
+    return skipped;
 }
 
 
