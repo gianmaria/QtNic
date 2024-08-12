@@ -10,6 +10,7 @@
 #include <string_view>
 #include <string>
 #include <vector>
+#include <memory>
 //#include <cwchar>
 
 
@@ -48,7 +49,10 @@ void dump_nic_info(const vec<Interface> &interfaces, str_cref filename);
 void update_nic_metric(const vec<Interface>& interfaces,
                        str_cref filename);
 
-vec<Interface> collect_nic_info();
+vec<std::shared_ptr<Interface>> collect_nic_info();
+
+// NOTE: all this mumbo jumbo to hide windows.h from qt....
+str_cref get_name(const std::shared_ptr<Interface>& nic);
 
 
 #endif // NIC_H

@@ -279,7 +279,7 @@ void update_nic_metric(const vec<Interface> &interfaces, str_cref filename)
     }
 }
 
-vec<Interface> collect_nic_info()
+vec<std::shared_ptr<Interface>> collect_nic_info()
 {
     ULONG buffer_size = 0;
     ULONG adapters_flags =
@@ -309,7 +309,7 @@ vec<Interface> collect_nic_info()
                           last_error_as_string(result));
     }
 
-    vec<Interface> interfaces;
+    vec<std::shared_ptr<Interface>> interfaces;
 
     IP_ADAPTER_ADDRESSES* adapter = (IP_ADAPTER_ADDRESSES*)mem.get();
 
@@ -376,7 +376,7 @@ vec<Interface> collect_nic_info()
             itf.dns.append(to_UTF8(dns_str)).append(" ");
         }
 
-        interfaces.push_back(std::move(itf));
+        interfaces.push_back(std::make_shared<Interface>(itf));
 
         adapter = adapter->Next;
     }
@@ -385,6 +385,11 @@ vec<Interface> collect_nic_info()
 }
 
 bool is_user_admin()
+str_cref get_name(const std::shared_ptr<Interface>& nic)
+{
+    return nic->name;
+}
+
 {
     SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
     PSID AdministratorsGroup {};
