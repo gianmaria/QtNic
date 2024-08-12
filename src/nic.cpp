@@ -10,8 +10,8 @@
 #include <ws2ipdef.h>
 #include <ws2tcpip.h> // for inet_ntop function
 #include <iphlpapi.h>
+#include <shellapi.h>
 
-#include <fstream>
 #include <sstream>
 
 #include "rapidjson/document.h"
@@ -334,6 +334,29 @@ bool is_running_as_administrator()
     return is_member == TRUE;
 }
 
+DWORD restart_as_admin()
+{
+    wchar_t szPath[MAX_PATH];
+
+    auto res = GetModuleFileNameW(NULL, szPath, ARRAYSIZE(szPath));
+
+    if (res == MAX_PATH)
+    {
+        return GetLastError();
+    }
+
+    SHELLEXECUTEINFO sei {0};
+    sei.cbSize = sizeof(sei);
+    // sei.fMask = SEE_MASK_NOASYNC;
+    sei.lpVerb = L"runas";
+    sei.lpFile = szPath;
+    sei.hwnd = NULL;
+    sei.nShow = SW_NORMAL;
+
+    auto success = ShellExecuteExW(&sei);
+
+    return (success == TRUE) ? NO_ERROR : GetLastError();
+}
 
 
 

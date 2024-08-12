@@ -50,10 +50,12 @@ void update_nic_metric(const vec<shared<Interface>>& interfaces,
 str dump_nic_info(const vec<shared<Interface>> &interfaces);
 
 
+str last_error_as_string(unsigned long last_error);
+bool is_running_as_administrator();
+unsigned long restart_as_admin();
 
 // NOTE: all this mumbo jumbo to hide windows.h from qt....
 str_cref get_name(const shared<Interface>& nic);
 
-bool is_running_as_administrator();
 
 #endif // NIC_H
