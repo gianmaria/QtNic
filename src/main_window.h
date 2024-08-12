@@ -17,6 +17,10 @@ public:
     Main_Window(QWidget *parent = nullptr);
     ~Main_Window();
 
+public slots:
+    void onPbLoadReleased();
+    void onPbSaveReleased();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void closeEvent(QCloseEvent *event);

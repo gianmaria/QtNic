@@ -32,6 +32,10 @@ Main_Window::Main_Window(QWidget *parent)
 
 
     // ui->plainTextEdit->appendPlainText(QString("is user admin? %1").arg(is_running_as_administrator()));
+    connect(ui->pbLoad, &QPushButton::released,
+            this, &Main_Window::onPbLoadReleased);
+    connect(ui->pbSave, &QPushButton::released,
+            this, &Main_Window::onPbSaveReleased);
 }
 
 void Main_Window::keyPressEvent(QKeyEvent *event)
@@ -54,4 +58,31 @@ void Main_Window::closeEvent(QCloseEvent *event)
 Main_Window::~Main_Window()
 {
     delete ui;
+}
+
+void Main_Window::onPbLoadReleased()
+{
+    ui->plainTextEdit->clear();
+
+    auto nics = collect_nic_info();
+    auto cpp_str = dump_nic_info(nics);
+    ui->plainTextEdit->setPlainText(QString::fromUtf8(cpp_str.data(), -1));
+}
+
+void Main_Window::onPbSaveReleased()
+{
+    auto content = ui->plainTextEdit->toPlainText().toStdString();
+    try
+    {
+        auto nics = collect_nic_info();
+        update_nic_metric(nics, content);
+    }
+    catch (str_cref e)
+    {
+        qDebug() << e;
+    }
+    catch (const std::exception& e)
+    {
+        qDebug() << "[EXC] " << e.what();
+    }
 }
