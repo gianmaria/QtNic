@@ -36,7 +36,7 @@ void Main_Window::keyPressEvent(QKeyEvent *event)
 
 void Main_Window::closeEvent(QCloseEvent *event)
 {
-    qDebug() << "goodbyeeeeeeeeeeeee";
+    // qDebug() << "goodbyeeeeeeeeeeeee";
     QMainWindow::closeEvent(event);
 }
 
@@ -61,13 +61,18 @@ void Main_Window::onPbSaveReleased()
     {
         auto nics = collect_nic_info();
         update_nic_metric(nics, content);
+        ui->statusBar->showMessage("All good!", 3000);
     }
     catch (str_cref e)
     {
-        qDebug() << e;
+        auto msg = QString("%1").arg(e.data());
+        ui->statusBar->showMessage(msg, 6000);
+        // qDebug() << e;
     }
     catch (const std::exception& e)
     {
-        qDebug() << "[EXC] " << e.what();
+        auto msg = QString("%1").arg(e.what());
+        ui->statusBar->showMessage(msg, 6000);
+        // qDebug() << "[EXC] " << e.what();
     }
 }
