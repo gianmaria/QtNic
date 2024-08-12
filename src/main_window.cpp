@@ -65,8 +65,17 @@ void Main_Window::onPbSaveReleased()
     try
     {
         auto nics = collect_nic_info();
-        update_nic_metric(nics, content);
+        u32 skipped = update_nic_metric(nics, content);
+        if (skipped == 0)
+        {
         ui->statusBar->showMessage("All good!", 3000);
+    }
+        else
+        {
+            ui->statusBar->showMessage(
+                QString("Warning! %1 interface/s skipped").arg(skipped), 
+                3000);
+        }
     }
     catch (str_cref e)
     {
