@@ -11,7 +11,6 @@ Main_Window::Main_Window(QWidget *parent)
     , ui(new Ui::Main_Window)
 {
     ui->setupUi(this);
-    ui->pbLoad->setVisible(false);
 
     setWindowTitle("All my interfaces");
 
@@ -19,12 +18,10 @@ Main_Window::Main_Window(QWidget *parent)
     connect(quit_shortcut, &QShortcut::activated,
             this, [this](){this->close();});
 
-    connect(ui->pbLoad, &QPushButton::released,
-            this, &Main_Window::onPbLoadReleased);
-    ui->pbLoad->click(); // simulate click instantly
-
     connect(ui->pbSave, &QPushButton::released,
             this, &Main_Window::onPbSaveReleased);
+
+    loadAllNics();
 }
 
 void Main_Window::keyPressEvent(QKeyEvent *event)
@@ -49,13 +46,17 @@ Main_Window::~Main_Window()
     delete ui;
 }
 
-void Main_Window::onPbLoadReleased()
+void Main_Window::loadAllNics()
 {
     ui->plainTextEdit->clear();
 
     auto nics = collect_nic_info();
-    auto cpp_str = dump_nic_info(nics);
-    ui->plainTextEdit->setPlainText(QString::fromUtf8(cpp_str.data(), -1));
+
+    for (const auto& nic : nics)
+    {
+        const auto& name = get_name(nic);
+        ui->plainTextEdit->appendPlainText(QString::fromUtf8(name.data(), -1));
+    }
 }
 
 void Main_Window::onPbSaveReleased()

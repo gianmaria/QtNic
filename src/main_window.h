@@ -18,7 +18,7 @@ public:
     ~Main_Window();
 
 public slots:
-    void onPbLoadReleased();
+    void loadAllNics();
     void onPbSaveReleased();
 
 protected:

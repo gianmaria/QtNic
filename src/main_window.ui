@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
+    <width>382</width>
     <height>414</height>
    </rect>
   </property>
@@ -30,25 +30,6 @@
     </item>
     <item row="2" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="pbLoad">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>&amp;Load</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <widget class="QPushButton" name="pbSave">
         <property name="sizePolicy">
