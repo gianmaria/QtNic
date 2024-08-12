@@ -18,6 +18,10 @@ Main_Window::Main_Window(QWidget *parent)
     connect(quit_shortcut, &QShortcut::activated,
             this, [this](){this->close();});
 
+    auto* save_shortcut = new QShortcut({Qt::CTRL | Qt::Key_S}, this);
+    connect(save_shortcut, &QShortcut::activated,
+            this, [this](){this->ui->pbSave->click();});
+
     connect(ui->pbSave, &QPushButton::released,
             this, &Main_Window::onPbSaveReleased);
 
