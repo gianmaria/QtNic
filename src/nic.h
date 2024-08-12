@@ -54,5 +54,6 @@ vec<std::shared_ptr<Interface>> collect_nic_info();
 // NOTE: all this mumbo jumbo to hide windows.h from qt....
 str_cref get_name(const std::shared_ptr<Interface>& nic);
 
+bool is_running_as_administrator();
 
 #endif // NIC_H

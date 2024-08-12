@@ -384,12 +384,13 @@ vec<std::shared_ptr<Interface>> collect_nic_info()
     return interfaces;
 }
 
-bool is_user_admin()
+
 str_cref get_name(const std::shared_ptr<Interface>& nic)
 {
     return nic->name;
 }
 
+bool is_running_as_administrator()
 {
     SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
     PSID AdministratorsGroup {};
@@ -473,4 +474,6 @@ void run_as_administrator(wchar_t* argv[])
     }
 }
 #endif
+
+
 
