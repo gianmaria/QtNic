@@ -15,6 +15,21 @@ Main_Window::Main_Window(QWidget *parent)
 
     vec<Interface> nics = collect_nic_info();
 
+void Main_Window::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_A)
+    {
+        qDebug() << "A key pressed!";
+    }
+
+    QMainWindow::keyPressEvent(event);
+
+}
+
+void Main_Window::closeEvent(QCloseEvent *event)
+{
+    qDebug() << "goodbyeeeeeeeeeeeee";
+    QMainWindow::closeEvent(event);
 }
 
 Main_Window::~Main_Window()

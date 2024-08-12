@@ -17,6 +17,10 @@ public:
     Main_Window(QWidget *parent = nullptr);
     ~Main_Window();
 
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void closeEvent(QCloseEvent *event);
+
 private:
     Ui::Main_Window *ui;
 };
