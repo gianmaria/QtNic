@@ -11,6 +11,7 @@ Main_Window::Main_Window(QWidget *parent)
     , ui(new Ui::Main_Window)
 {
     ui->setupUi(this);
+    setWindowTitle("All my interfaces");
 
     auto* quit_shortcut = new QShortcut({Qt::Key_Escape}, this);
     connect(quit_shortcut, &QShortcut::activated,
