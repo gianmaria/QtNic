@@ -131,7 +131,8 @@ str last_error_as_string(DWORD last_error)
     return to_UTF8(wstr(buffer, size));
 }
 
-void dump_nic_info(const vec<Interface> &interfaces, str_cref filename) {
+void dump_nic_info(const vec<Interface> &interfaces, str_cref filename)
+{
     StringBuffer sb;
     PrettyWriter writer(sb);
 
@@ -188,9 +189,7 @@ void update_nic_metric_for_luid(str_cref interface_name, IF_LUID luid, ULONG new
 
 void update_nic_metric(const vec<Interface> &interfaces, str_cref filename)
 {
-    std::ifstream ifs(filename,
-                      std::ios::in |
-                          std::ios::binary);
+    std::ifstream ifs(filename, std::ios::in | std::ios::binary);
 
     if (not ifs.is_open())
     {
