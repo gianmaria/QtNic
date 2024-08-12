@@ -26,6 +26,7 @@ using namespace rapidjson;
 
 struct Interface
 {
+    // NOTE: all std::string are utf-8 encoded
     str name;
     str description;
     str ip;
@@ -279,7 +280,7 @@ void update_nic_metric(const vec<Interface> &interfaces, str_cref filename)
     }
 }
 
-vec<std::shared_ptr<Interface>> collect_nic_info()
+vec<shared<Interface>> collect_nic_info()
 {
     ULONG buffer_size = 0;
     ULONG adapters_flags =
@@ -309,7 +310,7 @@ vec<std::shared_ptr<Interface>> collect_nic_info()
                           last_error_as_string(result));
     }
 
-    vec<std::shared_ptr<Interface>> interfaces;
+    vec<shared<Interface>> interfaces;
 
     IP_ADAPTER_ADDRESSES* adapter = (IP_ADAPTER_ADDRESSES*)mem.get();
 
@@ -385,7 +386,7 @@ vec<std::shared_ptr<Interface>> collect_nic_info()
 }
 
 
-str_cref get_name(const std::shared_ptr<Interface>& nic)
+str_cref get_name(const shared<Interface>& nic)
 {
     return nic->name;
 }
