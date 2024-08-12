@@ -4,12 +4,15 @@
 #include "nic.h"
 
 #include <QPushButton>
-
 Main_Window::Main_Window(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Main_Window)
 {
     ui->setupUi(this);
+
+    auto* quit_shortcut = new QShortcut({Qt::Key_Escape}, this);
+    connect(quit_shortcut, &QShortcut::activated,
+            this, [this](){this->close();});
 
     //ui->plainTextEdit->setPlainText(QString("User is admin? %1").arg(is_user_admin()));
 
