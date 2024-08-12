@@ -293,10 +293,6 @@ str dump_nic_info(const vec<shared<Interface>> &interfaces)
     return ss.str();
 }
 
-str_cref get_name(const shared<Interface>& nic)
-{
-    return nic->name;
-}
 
 bool is_running_as_administrator()
 {
@@ -358,6 +354,10 @@ DWORD restart_as_admin()
     return (success == TRUE) ? NO_ERROR : GetLastError();
 }
 
+str_cref get_name(const shared<Interface>& nic)
+{
+    return nic->name;
+}
 
 
 // private stuff
