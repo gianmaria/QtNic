@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(NicQt VERSION 0.1 LANGUAGES CXX)
+project(QtNic VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -21,14 +21,14 @@ set(PROJECT_SOURCES
         src/utf8.h
 )
 
-qt_add_executable(NicQt
+qt_add_executable(QtNic
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
 )
 
-target_link_libraries(NicQt PRIVATE Qt6::Widgets)
+target_link_libraries(QtNic PRIVATE Qt6::Widgets)
 
-set_target_properties(NicQt PROPERTIES
+set_target_properties(QtNic PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
